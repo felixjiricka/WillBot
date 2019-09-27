@@ -21,7 +21,7 @@ async function sendMail(link, datetime) {
     console.log(link);
     await transporter.sendMail({
         from: '"MadeByFelix" <info@madebyfelix.xyz>', // sender address
-        to: 'felixjiricka@outlook.com, dominic.st18@gmail.com', // list of receivers
+        to: 'felixjiricka@outlook.com', // list of receivers
         subject: 'Neues Produkt', // Subject line
         html: `Es ist so eben ein neues Product online gegangen! (${moment(datetime).format('DD.MM.YYYY HH:mm')}) <br> Klicke <a href="${link}">hier.</a>` // html body
     });
@@ -89,7 +89,7 @@ function sendRequest(entry) {
 
         let data = handleRequestData(body, entry);
         for(let i = 0; i < data.length; i++) {
-            sendMail(data[i]['link'], data[i]['datetime']);
+            sendMail(data[i]['link'], data[i]['datetime']).then().catch((err) => console.log(err));
         }
     });
 }
@@ -109,10 +109,12 @@ function handleRequestData(body, entry) {
     });
 
     //set new latest product
-    entry.latestProduct = moment.max(productData.map((d) => d.datetime));
-    connection.query(`update BotEntries set latestProduct = '${entry.latestProduct.format('DD.MM.YYYY HH:mm')}'`, function(error, rows, fields){
+    if(productData.length > 0) {
+        entry.latestProduct = moment.max(productData.map((d) => d.datetime));
+        connection.query(`update BotEntries set latestProduct = '${entry.latestProduct.format('DD.MM.YYYY HH:mm')}'`, function(error, rows, fields){
 
-    });
+        });
+    }
 
     console.log(entry.latestProduct.format('DD.MM.YYYY HH:mm'));
     return productData;
