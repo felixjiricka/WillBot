@@ -21,7 +21,7 @@ async function sendMail(link, datetime) {
     console.log(link);
     await transporter.sendMail({
         from: '"MadeByFelix" <info@madebyfelix.xyz>', // sender address
-        to: 'felixjiricka@outlook.com', // list of receivers
+        to: 'felixjiricka@outlook.com, dominic.st18@gmail.com', // list of receivers
         subject: 'Neues Produkt', // Subject line
         html: `Es ist so eben ein neues Product online gegangen! (${moment(datetime).format('DD.MM.YYYY HH:mm')}) <br> Klicke <a href="${link}">hier.</a>` // html body
     });
