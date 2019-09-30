@@ -107,6 +107,7 @@ stage.hears('Neuen Agenten', (ctx) => {
     ctx.scene.enter('add_botentry');
 });
 
+<<<<<<< HEAD
 stage.hears(showAgentText, (ctx) => {
     ctx.scene.leave();
     getUserEntries(ctx.chat.username).then((rows) => {
@@ -124,6 +125,17 @@ stage.hears('abbrechen', (ctx) => {
     ctx.scene.leave();
     ctx.reply('Operation wurde beendet', mainMenuKeyboard.draw());
 });
+=======
+async function sendMail(link, datetime) {
+    console.log(link);
+    await transporter.sendMail({
+        from: '"MadeByFelix" <info@madebyfelix.xyz>', // sender address
+        to: 'felixjiricka@outlook.com', // list of receivers
+        subject: 'Neues Produkt', // Subject line
+        html: `Es ist so eben ein neues Product online gegangen! (${moment(datetime).format('DD.MM.YYYY HH:mm')}) <br> Klicke <a href="${link}">hier.</a>` // html body
+    });
+}
+>>>>>>> ed337b941068834aaa4020b0fb80270a00eec16c
 
 bot.use(session());
 bot.use(stage.middleware());
@@ -192,6 +204,7 @@ function sendRequest(entry) {
 
         let data = handleRequestData(body, entry);
         for(let i = 0; i < data.length; i++) {
+<<<<<<< HEAD
             console.log("AHHHHH NEW PRODUCT");
             bot.telegram.sendMessage(entry.chatID,
                     `Soeben ist ein neues Produkt online gegangen! \n\n` +
@@ -201,6 +214,9 @@ function sendRequest(entry) {
                 .catch((error) => {
                     console.log(error);
                 })
+=======
+            sendMail(data[i]['link'], data[i]['datetime']).then().catch((err) => console.log(err));
+>>>>>>> ed337b941068834aaa4020b0fb80270a00eec16c
         }
     });
 }
@@ -220,11 +236,18 @@ function handleRequestData(body, entry) {
         }
     });
 
+<<<<<<< HEAD
     if(productData.length > 0) {
         //set new latest product
         console.log(`There are ${productData.length} new Products!!`);
         entry.latestProduct = moment.max(productData.map((d) => d.datetime));
         connection.query(`update BotEntries set latestProduct = '${entry.latestProduct.format('DD.MM.YYYY HH:mm')}' where owner = '${entry.owner}' and name = '${entry.name}'`, function(error, rows, fields){
+=======
+    //set new latest product
+    if(productData.length > 0) {
+        entry.latestProduct = moment.max(productData.map((d) => d.datetime));
+        connection.query(`update BotEntries set latestProduct = '${entry.latestProduct.format('DD.MM.YYYY HH:mm')}'`, function(error, rows, fields){
+>>>>>>> ed337b941068834aaa4020b0fb80270a00eec16c
 
         });
     }
